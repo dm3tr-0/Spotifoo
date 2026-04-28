@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotifoo · Spicetify для Android</title>
+    <meta name="description" content="Spotifoo — аналог Spicetify для Android. Кастомизация Spotify, блокировка рекламы, свобода выбора треков на мобильных устройствах.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0c10;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Fira Code', monospace;
+            color: #e6edf3;
+            line-height: 1.5;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .logo-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #1db954, #2f9fff);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 0 20px rgba(29, 185, 84, 0.3);
+        }
+
+        .header-info h1 {
+            font-size: 2.2rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff, #1db954);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #1f2428;
+            border: 1px solid #1db954;
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.75rem;
+            color: #1db954;
+            margin-top: 0.5rem;
+        }
+
+        .version {
+            color: #8b949e;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+
+        /* Status banner */
+        .status-banner {
+            background: linear-gradient(135deg, rgba(29, 185, 84, 0.1), rgba(47, 159, 255, 0.1));
+            border: 1px solid rgba(29, 185, 84, 0.3);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .status-text {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #f5a623;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .status-text span:first-child {
+            font-weight: 600;
+            color: #f5a623;
+        }
+
+        .github-link {
+            background: #1f2428;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: #e6edf3;
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: border-color 0.2s;
+        }
+
+        .github-link:hover {
+            border-color: #1db954;
+        }
+
+        /* Cards layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: #1db954;
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #1db954;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            position: relative;
+            font-size: 0.9rem;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #1db954;
+        }
+
+        .feature-list li.disabled::before {
+            content: "○";
+            color: #8b949e;
+        }
+
+        .feature-list li.disabled {
+            color: #8b949e;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tech-tag {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 16px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.7rem;
+            font-family: monospace;
+            color: #c9d1d9;
+        }
+
+        .tech-tag.highlight {
+            border-color: #1db954;
+            color: #1db954;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: #1db954;
+            color: #0a0c10;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            transition: opacity 0.2s;
+        }
+
+        .download-btn:hover {
+            opacity: 0.85;
+        }
+
+        .changelog-item {
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #21262d;
+            font-size: 0.85rem;
+        }
+
+        .changelog-item:last-child {
+            border-bottom: none;
+        }
+
+        .changelog-date {
+            color: #1db954;
+            font-size: 0.7rem;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .links-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .links-row a {
+            color: #58a6ff;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .links-row a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #21262d;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #8b949e;
+        }
+
+        footer a {
+            color: #8b949e;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #1db954;
+        }
+
+        @media (max-width: 600px) {
+            .header { flex-direction: column; text-align: center; }
+            .grid { grid-template-columns: 1fr; }
+            .status-banner { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-icon">🎵</div>
+            <div class="header-info">
+                <h1>Spotifoo</h1>
+                <span class="badge">⚡ Spicetify для Android</span>
+                <div class="version">версия 0.5.0 · Android 7.0+</div>
+            </div>
+        </div>
+
+        <!-- Status banner -->
+        <div class="status-banner">
+            <div class="status-text">
+                <div class="status-dot"></div>
+                <span>В стадии активной разработки</span>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+                <a href="https://github.com/dm3tr-0/Spotifoo" class="github-link">
+                    🐙 GitHub
+                </a>
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- Карточка 1: Что это? -->
+            <div class="card">
+                <h3>🎯 что это?</h3>
+                <p style="margin-bottom: 1rem;">
+                    <strong>Spotifoo</strong> — альтернативный клиент Spotify для Android, 
+                    который даёт возможности, недоступные в официальном приложении.
+                </p>
+                <p style="color: #8b949e; font-size: 0.85rem;">
+                    Вдохновлён <strong>Spicetify</strong> для ПК. 
+                    Вместо патчинга APK использует GeckoView (движок Firefox) с WebExtensions.
+                </p>
+            </div>
+
+            <!-- Карточка 2: Возможности -->
+            <div class="card">
+                <h3>✨ возможности</h3>
+                <ul class="feature-list">
+                    <li>Свободный выбор любого трека (как на ПК)</li>
+                    <li>Перемотка и пропуск треков без ограничений</li>
+                    <li>Блокировка аудио- и баннерной рекламы</li>
+                    <li>Маскировка под десктопный браузер</li>
+                    <li class="disabled">Свои темы оформления (в планах)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- Карточка 3: Как это работает -->
+            <div class="card">
+                <h3>⚙️ как работает</h3>
+                <p style="margin-bottom: 1rem; font-size: 0.9rem;">
+                    В отличие от "взломанных" APK, Spotifoo не модифицирует оригинальное приложение.
+                </p>
+                <ol style="margin-left: 1.25rem; font-size: 0.85rem; color: #b1bac4; display: flex; flex-direction: column; gap: 0.5rem;">
+                    <li>Открывает <code style="background:#0d1117; padding:0.1rem 0.3rem; border-radius:4px;">open.spotify.com</code> в GeckoView</li>
+                    <li>Маскируется под десктопный Firefox (чтобы получить ПК-функции)</li>
+                    <li>Использует переработанный код расширения Spicetify (Adblockify)</li>
+		    <li>Подключает uBlock Origin для блокировки рекламы</li>
+                    <li>Инжектит CSS для мобильной адаптации интерфейса</li>
+                </ol>
+            </div>
+
+            <!-- Карточка 4: Технологии -->
+            <div class="card">
+                <h3>🛠️ технологии</h3>
+                <div class="tech-stack" style="margin-top: 0;">
+                    <span class="tech-tag highlight">GeckoView 141.0</span>
+                    <span class="tech-tag highlight">Kotlin</span>
+                    <span class="tech-tag highlight">WebExtension API</span>
+                    <span class="tech-tag highlight">uBlock Origin</span>
+                    <span class="tech-tag highlight">CSS-injection</span>
+                    <span class="tech-tag highlight">User-Agent spoofing</span>
+                </div>
+                <hr style="margin: 1rem 0; border-color: #21262d;">
+                <h3 style="color: #1db954; margin-top: 0.5rem;">📦 сборка</h3>
+                <div class="tech-stack">
+                    <span class="tech-tag">arm64-v8a</span>
+                    <span class="tech-tag">armeabi-v7a</span>
+                    <span class="tech-tag">x86</span>
+                    <span class="tech-tag">x86_64</span>
+                </div>
+                <div class="links-row">
+                    <a href="https://github.com/dm3tr-0/Spotifoo/releases">⬇️ Скачать APK</a>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Footer -->
+        <footer>
+            dm3tr0 · пентестер, исследователь безопасности · 
+            <a href="https://github.com/dm3tr-0">GitHub</a> · 
+            <a href="https://github.com/dm3tr-0/Spotifoo">Spotifoo repo</a>
+            <br><br>
+            ⚠️ Проект не аффилирован с Spotify. Используйте на свой страх и риск.
+        </footer>
+    </div>
+</body>
+</html>
