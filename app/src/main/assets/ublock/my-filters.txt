@@ -1,0 +1,6 @@
+! Spotify Mobile CSS Fix
+open.spotify.com##.main-view-container, .Root__main-view, .now-playing-bar:style(width: 100vw !important; max-width: 100% !important)
+open.spotify.com##button, [role="button"]:style(min-height: 44px !important; min-width: 44px !important)
+open.spotify.com##[data-testid="download-app-button"], .download-banner, .encourage-banner, .ETeoF:style(display: none !important)
+open.spotify.com##.sidebar:style(width: 100% !important; position: fixed !important; bottom: 0 !important)
+open.spotify.com##body:style(overflow-x: auto !important; padding: 0 !important; margin: 0 !important)
